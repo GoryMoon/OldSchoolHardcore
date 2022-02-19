@@ -1,0 +1,10 @@
+{
+    "required": false,
+    "package": "se.gory_moon.old_school_hardcore.mixins",
+    "compatibilityLevel": "JAVA_17",
+    "refmap": "mixins.old_school_hardcore.refmap.json",
+    "mixins": [
+        "MixinQuestingData"
+    ],
+    "minVersion": "0.8"
+}

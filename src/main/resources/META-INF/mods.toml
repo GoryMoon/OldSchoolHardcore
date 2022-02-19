@@ -1,0 +1,39 @@
+modLoader="javafml"
+loaderVersion="[39,)"
+license="MIT"
+
+[[mods]]
+    modId="old_school_hardcore"
+    version="${file.jarVersion}"
+    displayName="Old School Hardcore"
+    logoFile="logo.png"
+    itemIcon="minecraft:enchanted_golden_apple"
+    credits="Darkosto for feature request."
+    authors="Gory_Moon"
+    description='''
+A mod that recreates the "delete" world feature from earlier minecraft versions.
+
+It's integrated into HQM to delete the world when you run out of lives.
+'''
+
+[[dependencies.old_school_hardcore]]
+    modId="forge"
+    mandatory=true
+    versionRange="[39,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.old_school_hardcore]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.1,1.19)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.old_school_hardcore]]
+    modId="hardcorequesting"
+    mandatory=false
+    versionRange="[1.18.1-5.9.1,)"
+    ordering="BEFORE"
+    side="BOTH"
+
