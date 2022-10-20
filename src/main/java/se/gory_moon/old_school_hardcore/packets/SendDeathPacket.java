@@ -15,10 +15,6 @@ public class SendDeathPacket {
     public void encode(FriendlyByteBuf buf) {}
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            //noinspection Convert2MethodRef
-            ClientUtils.INSTANCE.setPlayerHardcoreDead();
-        });
-        ctx.get().setPacketHandled(true);
+        ClientUtils.INSTANCE.setPlayerHardcoreDead();
     }
 }
