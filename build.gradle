@@ -1,19 +1,17 @@
 buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        mavenCentral()
-    }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+'
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
+        // Can't use the newer 'plugins' block for Mixin, need to use the old 'apply plugin' method
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 apply plugin: 'org.spongepowered.mixin'
 
 apply from: "https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/minecraft/artifacts.gradle"
@@ -29,7 +27,7 @@ if (System.getenv().GITHUB_RUN_NUMBER  != null) {//adds the build number to the 
     version += ".${System.getenv().GITHUB_RUN_NUMBER}"
 }
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
 
@@ -44,6 +42,9 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'oldschoolhardcore'
 
             // Make mixins work on dependencies
             property 'mixin.env.remapRefMap', 'true'
@@ -65,6 +66,36 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'oldschoolhardcore'
+
+            // Make mixins work on dependencies
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            mods {
+                oldschoolhardcore {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'REGISTRIES'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'oldschoolhardcore'
+
+            // Make mixins work on dependencies
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 oldschoolhardcore {
                     source sourceSets.main
@@ -80,6 +111,13 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'oldschoolhardcore'
+
+            // Make mixins work on dependencies
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', 'hqmfixes', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -111,7 +149,8 @@ dependencies {
     // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf("curse.maven:hqm-77027:3623553") // HQM-1.18.1-5.9.1-forge.jar
+    implementation fg.deobf("curse.maven:architectury-api-419699:3984018") // architectury-6.2.46-forge.jar
+    implementation fg.deobf("curse.maven:hqm-77027:4033544") // HQM-1.19.2-5.12.2-forge.jar
 }
 
 mixin {
@@ -130,18 +169,22 @@ javadoc {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "old_school_hardcore",
-                "Specification-Vendor"    : "Gory_Moon",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "old_school_hardcore",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Specification-Title"     : "old_school_hardcore",
+            "Specification-Vendor"    : "Gory_Moon",
+            "Specification-Version"   : "1", // We are version 1 of ourselves
+            "Implementation-Title"    : project.name,
+            "Implementation-Version"  : project.jar.archiveVersion,
+            "Implementation-Vendor"   : "old_school_hardcore",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
 
 jar.finalizedBy('signJar', 'reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
 
 // Jar Signing
 import net.minecraftforge.gradle.common.tasks.SignJar
@@ -152,7 +195,7 @@ task signJar(type: SignJar, dependsOn: jar) {
     }
 
     if (project.hasProperty('keyStore')) {
-        project.logger.info("Signing jar ${jar.archiveFileName.get()}");
+        project.logger.info("Signing jar ${jar.archiveFileName.get()}")
 
         keyStore = project.findProperty('keyStore')
         alias = project.findProperty('keyStoreAlias')

@@ -19,7 +19,7 @@ public class Network {
         CHANNEL.messageBuilder(SendDeathPacket.class, 0, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(SendDeathPacket::encode)
                 .decoder(SendDeathPacket::new)
-                .consumer(SendDeathPacket::handle)
+                .consumerMainThread(SendDeathPacket::handle)
                 .add();
     }
 

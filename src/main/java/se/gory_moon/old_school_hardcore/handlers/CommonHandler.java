@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -34,7 +34,7 @@ public class CommonHandler {
 
         // Vanilla hardcore handling
         if (isEnabled() && !CommonUtils.isHQMLoaded() &&
-                event.getEntityLiving() instanceof ServerPlayer player &&
+                event.getEntity() instanceof ServerPlayer player &&
                 player.server.isSingleplayer() && player.server.isHardcore()) {
             CommonUtils.setPlayerHardcoreDead(player);
             CommonUtils.sendDeathPacket(player);
@@ -43,9 +43,9 @@ public class CommonHandler {
 
     @SubscribeEvent
     public static void handlePlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getPlayer().level.isClientSide()) return;
+        if (event.getEntity().level.isClientSide()) return;
 
-        ServerPlayer player = (ServerPlayer) event.getPlayer();
+        ServerPlayer player = (ServerPlayer) event.getEntity();
         if (isEnabled() && checkPlayerDeath(player)) {
             CommonUtils.sendDeathPacket(player);
 
@@ -55,11 +55,11 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public static void handlePlayerJoinWorld(EntityJoinWorldEvent event) {
+    public static void handlePlayerJoinWorld(EntityJoinLevelEvent event) {
         if (allowGameModeChange() || !event.loadedFromDisk())
             return;
 
-        if (!event.getWorld().isClientSide() && checkPlayerDeath(event.getEntity())) {
+        if (!event.getLevel().isClientSide() && checkPlayerDeath(event.getEntity())) {
             ServerPlayer player = (ServerPlayer) event.getEntity();
             CommonUtils.sendDeathPacket(player);
 
@@ -76,8 +76,8 @@ public class CommonHandler {
         if (allowGameModeChange())
             return;
 
-        if (!event.getPlayer().level.isClientSide() && checkPlayerDeath(event.getEntity())) {
-            ServerPlayer player = (ServerPlayer) event.getPlayer();
+        if (!event.getEntity().level.isClientSide() && checkPlayerDeath(event.getEntity())) {
+            ServerPlayer player = (ServerPlayer) event.getEntity();
 
             CommonUtils.sendDeathPacket(player);
             player.setGameMode(GameType.SPECTATOR);
