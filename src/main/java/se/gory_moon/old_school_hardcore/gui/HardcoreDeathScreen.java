@@ -29,14 +29,15 @@ public class HardcoreDeathScreen extends DeathScreen {
             clearWidgets();
 
             exitButtons.clear();
-            exitButtons.add(this.addRenderableWidget(new Button(width / 2 - 100, height / 4 + 72, 200, 20, Component.translatable("deathScreen.spectate"), (button) -> {
+            exitButtons.add(this.addRenderableWidget(Button.builder(Component.translatable("deathScreen.spectate"), (button) -> {
                 if (minecraft.player != null) {
                     minecraft.player.respawn();
                     minecraft.setScreen(null);
                 }
-            })));
-            exitButtons.add(this.addRenderableWidget(new Button(width / 2 - 100, height / 4 + 96, 200, 20, Component.translatable("old_school_hardcore.deathScreen.delete"), (button) ->
-                    this.exitToTitleScreen())));
+            }).bounds(width / 2 - 100, height / 4 + 72, 200, 20).build()));
+            exitButtons.add(this.addRenderableWidget(Button.builder(Component.translatable("old_school_hardcore.deathScreen.delete"), (button) ->
+                    this.exitToTitleScreen()
+            ).bounds(width / 2 - 100, height / 4 + 96, 200, 20).build()));
 
             for (Button button : this.exitButtons) {
                 button.active = false;

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[43,)"
+loaderVersion="[44,)"
 license="MIT"
 
 [[mods]]
@@ -13,27 +13,26 @@ license="MIT"
     description='''
 A mod that recreates the "delete" world feature from earlier minecraft versions.
 
-It's integrated into HQM to delete the world when you run out of lives.
-'''
+It's integrated into HQM to delete the world when you run out of lives.'''
 
 [[dependencies.old_school_hardcore]]
     modId="forge"
     mandatory=true
-    versionRange="[43,)"
+    versionRange="[44,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.old_school_hardcore]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2,1.20)"
+    versionRange="[1.19.3,1.19.4)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.old_school_hardcore]]
-    modId="hardcorequesting"
-    mandatory=false
-    versionRange="[1.19.2-5.12.1,)"
-    ordering="BEFORE"
-    side="BOTH"
+#[[dependencies.old_school_hardcore]]
+#    modId="hardcorequesting"
+#    mandatory=false
+#    versionRange="[1.19.2-5.12.1,)"
+#    ordering="BEFORE"
+#    side="BOTH"
 
