@@ -14,7 +14,6 @@ plugins {
 }
 apply plugin: 'org.spongepowered.mixin'
 
-apply from: "https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/minecraft/artifacts.gradle"
 
 version = mod_version
 group = 'se.gory_moon'
@@ -149,8 +148,9 @@ dependencies {
     // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf("curse.maven:architectury-api-419699:3984018") // architectury-6.2.46-forge.jar
-    implementation fg.deobf("curse.maven:hqm-77027:4033544") // HQM-1.19.2-5.12.2-forge.jar
+    // No HQM for 1.19.3
+    //implementation fg.deobf("curse.maven:architectury-api-419699:3984018") // architectury-6.2.46-forge.jar
+    //implementation fg.deobf("curse.maven:hqm-77027:4033544") // HQM-1.19.2-5.12.2-forge.jar
 }
 
 mixin {
@@ -161,9 +161,30 @@ mixin {
     debug.export = true
 }
 
-javadoc {
-    // Supress annoying warnings when generating JavaDoc files.
-    options.addStringOption('Xdoclint:none', '-quiet')
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    description = 'Creates a JAR containing the source code.'
+    from sourceSets.main.allSource
+    archiveClassifier.set('sources')
+}
+
+tasks.register('deobfJar', Jar) {
+    description = 'Creates a JAR containing the non-obfuscated compiled code.'
+    from sourceSets.main.output
+    archiveClassifier.set('deobf')
+}
+
+tasks.register('forgelibJar', Jar) {
+    description = 'Creates a compiled JAR which also contains raw sources.'
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+    archiveClassifier.set('forgelib')
+}
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+    archives forgelibJar
 }
 
 jar {
@@ -188,7 +209,7 @@ tasks.withType(JavaCompile).configureEach {
 
 // Jar Signing
 import net.minecraftforge.gradle.common.tasks.SignJar
-task signJar(type: SignJar, dependsOn: jar) {
+tasks.register('signJar', SignJar) {
     dependsOn 'reobfJar'
     onlyIf {
         project.hasProperty('keyStore')
@@ -203,8 +224,7 @@ task signJar(type: SignJar, dependsOn: jar) {
         keyPass = project.findProperty('keyStorePass')
         inputFile = jar.archiveFile.get()
         outputFile = jar.archiveFile.get()
-    }
-    else {
+    } else {
         project.logger.log(LogLevel.WARN, "Could not sign ${jar.archiveFileName.get()}. No keyStore property could be found")
     }
 }
