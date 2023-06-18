@@ -43,14 +43,14 @@ public class CommonHandler {
 
     @SubscribeEvent
     public static void handlePlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getEntity().level.isClientSide()) return;
+        if (event.getEntity().level().isClientSide()) return;
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
         if (isEnabled() && checkPlayerDeath(player)) {
             CommonUtils.sendDeathPacket(player);
 
             player.setGameMode(GameType.SPECTATOR);
-            player.getLevel().getGameRules().getRule(GameRules.RULE_SPECTATORSGENERATECHUNKS).set(false, player.server);
+            player.level().getGameRules().getRule(GameRules.RULE_SPECTATORSGENERATECHUNKS).set(false, player.server);
         }
     }
 
@@ -76,12 +76,12 @@ public class CommonHandler {
         if (allowGameModeChange())
             return;
 
-        if (!event.getEntity().level.isClientSide() && checkPlayerDeath(event.getEntity())) {
+        if (!event.getEntity().level().isClientSide() && checkPlayerDeath(event.getEntity())) {
             ServerPlayer player = (ServerPlayer) event.getEntity();
 
             CommonUtils.sendDeathPacket(player);
             player.setGameMode(GameType.SPECTATOR);
-            player.getLevel().getGameRules().getRule(GameRules.RULE_SPECTATORSGENERATECHUNKS).set(false, player.server);
+            player.level().getGameRules().getRule(GameRules.RULE_SPECTATORSGENERATECHUNKS).set(false, player.server);
 
             event.setCanceled(true);
         }

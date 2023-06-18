@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[45,)"
+loaderVersion="[46,)"
 license="MIT"
 
 [[mods]]
@@ -18,21 +18,21 @@ It's integrated into HQM to delete the world when you run out of lives.'''
 [[dependencies.old_school_hardcore]]
     modId="forge"
     mandatory=true
-    versionRange="[45,)"
+    versionRange="[46,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.old_school_hardcore]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.4,1.20)"
+    versionRange="[1.20,1.21)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.old_school_hardcore]]
-    modId="hardcorequesting"
-    mandatory=false
-    versionRange="[1.19.4-5.14.0,)"
-    ordering="BEFORE"
-    side="BOTH"
+#[[dependencies.old_school_hardcore]]
+#    modId="hardcorequesting"
+#    mandatory=false
+#    versionRange="[1.19.4-5.14.0,)"
+#    ordering="BEFORE"
+#    side="BOTH"
 

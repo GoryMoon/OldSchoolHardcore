@@ -8,7 +8,7 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
@@ -148,8 +148,8 @@ dependencies {
     // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf("curse.maven:architectury-api-419699:4555753") // architectury-8.1.87-forge.jar
-    implementation fg.deobf("curse.maven:hqm-77027:4553710") // HQM-1.19.4-5.14.0-forge.jar
+    //implementation fg.deobf("curse.maven:architectury-api-419699:4555753") // architectury-8.1.87-forge.jar
+    //implementation fg.deobf("curse.maven:hqm-77027:4553710") // HQM-1.19.4-5.14.0-forge.jar
 }
 
 mixin {
